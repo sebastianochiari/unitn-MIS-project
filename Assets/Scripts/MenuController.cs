@@ -8,12 +8,6 @@ public class MenuController : MonoBehaviour
 
     public void PlayGame()
     {
-        StartCoroutine(PlayGameCoroutine());
-    }
-
-    private IEnumerator PlayGameCoroutine()
-    {
-        yield return new WaitForSeconds(0.5f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
