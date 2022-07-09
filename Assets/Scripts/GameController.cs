@@ -8,89 +8,140 @@ using Random = System.Random;
 
 public class GameController : MonoBehaviour
 {
-    public GameObject board;
-
-    public int numberOfButtons = 6;
+    public static int NumberOfButtons = 6;
     public Slider buttonsSlider;
     
-    public int sequenceLength = 4;
+    public static int SequenceLength = 4;
     public Slider sequenceSlider;
 
+    public static int[] Sequence;
+
+    private int _pointerToSequence;
+    
+    // Booleans
+    
+    public static bool GameHasAlreadyStarted;
+    private bool playerIsPlaying;
+
+    // Events
+
+    public delegate void SetupLevelHandler();
+    public static event SetupLevelHandler SetupLevel;
+    
+    public delegate void StartTutorialHandler();
+    public static event StartTutorialHandler StartTutorial;
+
+    public delegate void ShowSequenceHandler();
+    public static event ShowSequenceHandler ShowSequence;
+
+    public delegate void StartCollectingInputHandler();
+
+    public static event StartCollectingInputHandler StartCollectingInput;
+
+   
+
+    // UI
+    
     public GameObject firstOpeningPanel;
     public GameObject midGamePanel;
 
-    public static bool GameHasAlreadyStarted;
+    private void Awake()
+    {
+        BoardController.SetupLevelEnded += OnSetupLevelEnded;
+        BoardController.TutorialEnded += OnTutorialEnded;
+        BoardController.ReadyToPlay += OnReadyToPlay;
+    }
 
-    private int _privateNumberOfButtons;
-    public GameObject[] buttons;
-
-    public Material[] materials;
+    private void OnDestroy()
+    {
+        BoardController.SetupLevelEnded -= OnSetupLevelEnded;
+        BoardController.TutorialEnded += OnTutorialEnded;
+        BoardController.ReadyToPlay -= OnReadyToPlay;
+    }
 
     void Start()
     {
-        _privateNumberOfButtons = board.transform.childCount;
-        Debug.Log(_privateNumberOfButtons);
-        buttons = new GameObject[_privateNumberOfButtons];
-
-        for (int i = 0; i < _privateNumberOfButtons; i++)
-        {
-            buttons[i] = board.transform.GetChild(i).gameObject;
-        }
-
-        buttonsSlider.value = GetSliderValueFromButtonConfiguration(numberOfButtons);
-        sequenceSlider.value = sequenceLength;
-
+        buttonsSlider.value = GetSliderValueFromButtonConfiguration(NumberOfButtons);
+        sequenceSlider.value = SequenceLength;
         GameHasAlreadyStarted = false;
+        playerIsPlaying = false;
     }
 
     void Update()
     {
         if (!UIController.GameIsPaused)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (playerIsPlaying)
             {
-                ShuffleButtons();
+                
             }
         }
+    }
+    
+    private void OnSetupLevelEnded()
+    {
+        StartTutorial?.Invoke();
+    }
+    
+    private void OnTutorialEnded()
+    {
+        ShowSequence?.Invoke();
+    }
+
+    private void OnReadyToPlay()
+    {
+        // now the player is playing
+        playerIsPlaying = true;
+        // set the pointer to the sequence to 0
+        _pointerToSequence = 0;
+        // invoke the input controller
+        StartCollectingInput?.Invoke();
     }
 
     public void GameLoop()
     {
         if (GameHasAlreadyStarted)
         {
-            
+            midGamePanel.SetActive(false);
         }
         else
         {
             GameHasAlreadyStarted = true;
             firstOpeningPanel.SetActive(false);
-            UIController.GameIsPaused = false;
         }
+        
+        UIController.GameIsPaused = false;
+            
+        Debug.Log("Number of buttons: " + NumberOfButtons);
+        Debug.Log("Sequence Length: " + SequenceLength);
+
+        CreateSequence();
+
+        SetupLevel?.Invoke();
     }
 
-    public void ShuffleButtons()
+    private void CreateSequence()
     {
+        Sequence = new int[SequenceLength];
         Random random = new Random();
-        var keys = materials.Select(e => random.NextDouble()).ToArray();
 
-        Array.Sort(keys, materials);
-
-        for (int i = 0; i < _privateNumberOfButtons; i++)
+        for (int i = 0; i < SequenceLength; i++)
         {
-            buttons[i].GetComponent<Renderer>().material = materials[i];
+            Sequence[i] = random.Next(NumberOfButtons);
+            Debug.Log("Sequence[" + i + "]: " + Sequence[i]);
         }
     }
 
     public void UpdateNumberOfButtons(float newNumberOfButtons)
     {
         // Debug.Log("Updating number of buttons. New value is " + newNumberOfButtons);
-        numberOfButtons = GetButtonConfigurationFromSlider((int) newNumberOfButtons);
+        NumberOfButtons = GetButtonConfigurationFromSlider((int) newNumberOfButtons);
     }
 
     public void UpdateSequenceLength(float newSequenceLength)
     {
         // Debug.Log("Updating sequence length. New value is " + newSequenceLength);
-        sequenceLength = (int)newSequenceLength;
+        SequenceLength = (int)newSequenceLength;
     }
 
     private int GetButtonConfigurationFromSlider(int sliderValue)
