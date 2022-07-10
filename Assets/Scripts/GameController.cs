@@ -8,6 +8,7 @@ using Random = System.Random;
 
 public class GameController : MonoBehaviour
 {
+    
     public static int NumberOfButtons = 6;
     public Slider buttonsSlider;
     
@@ -18,12 +19,12 @@ public class GameController : MonoBehaviour
 
     private int _pointerToSequence;
     
-    // Booleans
+    // BOOLEANS
     
     public static bool GameHasAlreadyStarted;
-    private bool playerIsPlaying;
+    private bool _playerIsPlaying;
 
-    // Events
+    // EVENTS
 
     public delegate void SetupLevelHandler();
     public static event SetupLevelHandler SetupLevel;
@@ -34,11 +35,14 @@ public class GameController : MonoBehaviour
     public delegate void ShowSequenceHandler();
     public static event ShowSequenceHandler ShowSequence;
 
-    public delegate void StartCollectingInputHandler();
+    public delegate void ShowGameStartUIHandler();
+    public static event ShowGameStartUIHandler ShowGameStartUI;
 
+    public delegate void StartCollectingInputHandler();
     public static event StartCollectingInputHandler StartCollectingInput;
 
-   
+    public delegate void StopCollectingInputHandler();
+    public static event StopCollectingInputHandler StopCollectingInput;
 
     // UI
     
@@ -50,13 +54,15 @@ public class GameController : MonoBehaviour
         BoardController.SetupLevelEnded += OnSetupLevelEnded;
         BoardController.TutorialEnded += OnTutorialEnded;
         BoardController.ReadyToPlay += OnReadyToPlay;
+        InputController.ButtonPressed += OnButtonPressed;
     }
 
     private void OnDestroy()
     {
         BoardController.SetupLevelEnded -= OnSetupLevelEnded;
-        BoardController.TutorialEnded += OnTutorialEnded;
+        BoardController.TutorialEnded -= OnTutorialEnded;
         BoardController.ReadyToPlay -= OnReadyToPlay;
+        InputController.ButtonPressed -= OnButtonPressed;
     }
 
     void Start()
@@ -64,20 +70,9 @@ public class GameController : MonoBehaviour
         buttonsSlider.value = GetSliderValueFromButtonConfiguration(NumberOfButtons);
         sequenceSlider.value = SequenceLength;
         GameHasAlreadyStarted = false;
-        playerIsPlaying = false;
+        _playerIsPlaying = false;
     }
 
-    void Update()
-    {
-        if (!UIController.GameIsPaused)
-        {
-            if (playerIsPlaying)
-            {
-                
-            }
-        }
-    }
-    
     private void OnSetupLevelEnded()
     {
         StartTutorial?.Invoke();
@@ -91,15 +86,62 @@ public class GameController : MonoBehaviour
     private void OnReadyToPlay()
     {
         // now the player is playing
-        playerIsPlaying = true;
+        _playerIsPlaying = true;
         // set the pointer to the sequence to 0
         _pointerToSequence = 0;
+        // show panel
+        ShowGameStartUI?.Invoke();
         // invoke the input controller
         StartCollectingInput?.Invoke();
     }
 
+    private void OnButtonPressed(int buttonID)
+    {
+        if (!UIController.GameIsPaused)
+        {
+            if (_playerIsPlaying)
+            {
+                Debug.Log("Checking if the button pressed corresponds to the right one in the sequence");
+
+                Debug.Log("Current buttonID required: " + Sequence[_pointerToSequence]);
+                Debug.Log("ButtonID pressed: " + buttonID);
+                
+                if (buttonID == Sequence[_pointerToSequence])
+                {
+
+                    Debug.Log("Got the right one");
+                    
+                    _pointerToSequence++;
+                    
+                    if (_pointerToSequence == SequenceLength)
+                    {
+                        Debug.Log("YOU WON!");
+                        
+                        _playerIsPlaying = false;
+
+                        StopCollectingInput();
+
+                        // show canvas
+                    }
+                }
+                else
+                {
+                    Debug.Log("GAME OVER!");
+                    
+                    _playerIsPlaying = false;
+
+                    StopCollectingInput();
+                    
+                    // show canvas
+                }
+            }
+        }
+    }
+
     public void GameLoop()
     {
+        // TODO: delete this logic, only firstOpeningPanel is diplayed
+        
         if (GameHasAlreadyStarted)
         {
             midGamePanel.SetActive(false);

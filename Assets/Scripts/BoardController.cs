@@ -13,6 +13,9 @@ public class BoardController : MonoBehaviour
     
     // EVENTS
 
+    public delegate void PlayTutorialButtonHandler(int buttonID, bool isTutorial);
+    public static event PlayTutorialButtonHandler PlayTutorialButton;
+
     public delegate void SetupLevelEndedHandler();
     public static event SetupLevelEndedHandler SetupLevelEnded;
 
@@ -21,6 +24,12 @@ public class BoardController : MonoBehaviour
 
     public delegate void ReadyToPlayHandler();
     public static event ReadyToPlayHandler ReadyToPlay;
+
+    public delegate void ShowTutorialUIHandler();
+    public static event ShowTutorialUIHandler ShowTutorialUI;
+
+    public delegate void ShowSequenceUIHandler();
+    public static event ShowSequenceUIHandler ShowSequenceUI;
 
     private void Awake()
     {
@@ -61,24 +70,20 @@ public class BoardController : MonoBehaviour
     
     private void OnStartTutorial()
     {
+        ShowTutorialUI?.Invoke();
         StartCoroutine(OnStartTutorialCoroutine());
     }
 
     IEnumerator OnStartTutorialCoroutine()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(12f);
 
         for (int i = 0; i < GameController.NumberOfButtons; i++)
         {
-            Renderer buttonRenderer = Buttons[i].GetComponent<Renderer>();
-
-            buttonRenderer.material = material1;
+            // send event to buttons with buttonID
+            PlayTutorialButton(i, true);
             
-            yield return new WaitForSeconds(.25f);
-            
-            buttonRenderer.material = new Material(Shader.Find("Diffuse"));
-            
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(5f);
         }
 
         TutorialEnded?.Invoke();
@@ -88,29 +93,21 @@ public class BoardController : MonoBehaviour
 
     private void OnShowSequence()
     {
-        Debug.Log("Start ShowSequenceButtons().");
+        ShowSequenceUI?.Invoke();
         StartCoroutine(OnShowSequenceCoroutine());
     }
 
     IEnumerator OnShowSequenceCoroutine()
     {
-        Debug.Log("Start ShowSequenceButtonsCoroutine().");
-        
-        yield return new WaitForSeconds(5f);
+
+        yield return new WaitForSeconds(12f);
         
         for (int i = 0; i < GameController.SequenceLength; i++)
         {
-            int buttonNumber = GameController.Sequence[i];
-
-            Renderer buttonRenderer = Buttons[buttonNumber].GetComponent<Renderer>();
-
-            buttonRenderer.material = material2;
+            // send event to buttons with buttonID
+            PlayTutorialButton(i, false);
             
-            yield return new WaitForSeconds(1f);
-            
-            buttonRenderer.material = new Material(Shader.Find("Diffuse"));
-            
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(5f);
         }
 
         ReadyToPlay?.Invoke();
