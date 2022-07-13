@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BoardController : MonoBehaviour
@@ -105,7 +106,7 @@ public class BoardController : MonoBehaviour
         for (int i = 0; i < GameController.SequenceLength; i++)
         {
             // send event to buttons with buttonID
-            PlayTutorialButton(i, false);
+            PlayTutorialButton(GameController.Sequence[i], false);
             
             yield return new WaitForSeconds(5f);
         }

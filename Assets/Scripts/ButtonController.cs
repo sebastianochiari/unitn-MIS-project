@@ -39,6 +39,7 @@ public class ButtonController : MonoBehaviour
         
         // events initialization
         BoardController.PlayTutorialButton += OnPlayButton;
+        InputController.ButtonPressed += OnPlayButton;
     }
 
     private void OnEnable()

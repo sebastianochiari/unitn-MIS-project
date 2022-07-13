@@ -18,6 +18,10 @@ public class GameController : MonoBehaviour
     public static int[] Sequence;
 
     private int _pointerToSequence;
+
+    public AudioSource cheering;
+    public AudioSource victory;
+    public AudioSource gameover;
     
     // BOOLEANS
     
@@ -44,10 +48,15 @@ public class GameController : MonoBehaviour
     public delegate void StopCollectingInputHandler();
     public static event StopCollectingInputHandler StopCollectingInput;
 
+    public delegate void ShowGameSuccessUIPanelHandler();
+    public static event ShowGameSuccessUIPanelHandler ShowGameSuccessUIPanel;
+
+    public delegate void ShowGameOverUIPanelHandler();
+    public static event ShowGameOverUIPanelHandler ShowGameOverUIPanel;
+
     // UI
     
     public GameObject firstOpeningPanel;
-    public GameObject midGamePanel;
 
     private void Awake()
     {
@@ -95,7 +104,7 @@ public class GameController : MonoBehaviour
         StartCollectingInput?.Invoke();
     }
 
-    private void OnButtonPressed(int buttonID)
+    private void OnButtonPressed(int buttonID, bool isTutorial)
     {
         if (!UIController.GameIsPaused)
         {
@@ -120,8 +129,17 @@ public class GameController : MonoBehaviour
                         _playerIsPlaying = false;
 
                         StopCollectingInput();
-
+                        
+                        // play victory sound
+                        victory.PlayDelayed(5.5f);
+                        
                         // show canvas
+                        ShowGameSuccessUIPanel();
+                    }
+                    else
+                    {
+                        // play cheering sound
+                        cheering.PlayDelayed(5.5f);
                     }
                 }
                 else
@@ -130,9 +148,13 @@ public class GameController : MonoBehaviour
                     
                     _playerIsPlaying = false;
 
-                    StopCollectingInput();
+                    StopCollectingInput?.Invoke();
+                    
+                    // play gameover sound
+                    gameover.PlayDelayed(5.5f);
                     
                     // show canvas
+                    ShowGameOverUIPanel?.Invoke();
                 }
             }
         }
@@ -140,18 +162,16 @@ public class GameController : MonoBehaviour
 
     public void GameLoop()
     {
-        // TODO: delete this logic, only firstOpeningPanel is diplayed
+
+        _playerIsPlaying = false;
         
-        if (GameHasAlreadyStarted)
-        {
-            midGamePanel.SetActive(false);
-        }
-        else
+        if (!GameHasAlreadyStarted)
         {
             GameHasAlreadyStarted = true;
-            firstOpeningPanel.SetActive(false);
         }
         
+        firstOpeningPanel.SetActive(false);
+
         UIController.GameIsPaused = false;
             
         Debug.Log("Number of buttons: " + NumberOfButtons);

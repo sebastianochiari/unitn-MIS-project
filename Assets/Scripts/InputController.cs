@@ -9,7 +9,7 @@ public class InputController : MonoBehaviour
     private bool _canCollectInput;
     
     // EVENTS
-    public delegate void ButtonPressedHandler(int buttonID);
+    public delegate void ButtonPressedHandler(int buttonID, bool isTutorial);
     public static event ButtonPressedHandler ButtonPressed;
 
     private void Awake()
@@ -39,23 +39,34 @@ public class InputController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 Debug.Log("Pressed Q");
-                ButtonPressed(0);
+                ButtonPressed(0, false);
             }
             if (Input.GetKeyDown(KeyCode.W))
             {
                 Debug.Log("Pressed W");
-                ButtonPressed(1);
+                ButtonPressed(1, false);
             }
             if (Input.GetKeyDown(KeyCode.A))
             {
                 Debug.Log("Pressed A");
-                ButtonPressed(2);
+                ButtonPressed(2, false);
             }
             if (Input.GetKeyDown(KeyCode.S))
             {
                 Debug.Log("Pressed S");
-                ButtonPressed(3);
+                ButtonPressed(3, false);
             }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Debug.Log("Pressed E");
+                ButtonPressed(4, false);
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                Debug.Log("Pressed D");
+                ButtonPressed(5, false);
+            }
+            
         }
     }
 

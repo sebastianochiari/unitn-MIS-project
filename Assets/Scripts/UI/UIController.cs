@@ -14,12 +14,16 @@ public class UIController : MonoBehaviour
     public GameObject startTutorialUI;
     public GameObject startSequenceUI;
     public GameObject gameStartUI;
+    public GameObject gameSuccessUI;
+    public GameObject gameOverUI;
 
     private void Awake()
     {
         BoardController.ShowTutorialUI += OnShowTutorialUI;
         BoardController.ShowSequenceUI += OnShowSequenceUI;
         GameController.ShowGameStartUI += OnShowGameStartUI;
+        GameController.ShowGameSuccessUIPanel += OnShowGameSuccessUIPanel;
+        GameController.ShowGameOverUIPanel += OnShowGameOverUIPanel;
     }
 
     private void OnDestroy()
@@ -27,6 +31,8 @@ public class UIController : MonoBehaviour
         BoardController.ShowTutorialUI -= OnShowTutorialUI;
         BoardController.ShowSequenceUI -= OnShowSequenceUI;
         GameController.ShowGameStartUI -= OnShowGameStartUI;
+        GameController.ShowGameSuccessUIPanel -= OnShowGameSuccessUIPanel;
+        GameController.ShowGameOverUIPanel -= OnShowGameOverUIPanel;
     }
 
     void Start()
@@ -80,6 +86,25 @@ public class UIController : MonoBehaviour
         yield break;
     }
 
+    private void OnShowGameSuccessUIPanel()
+    {
+        StartCoroutine(ShowEndGameUIPanelCoroutine(gameSuccessUI));
+    }
+
+    private void OnShowGameOverUIPanel()
+    {
+        StartCoroutine(ShowEndGameUIPanelCoroutine(gameOverUI));
+    }
+
+    IEnumerator ShowEndGameUIPanelCoroutine(GameObject gameObject)
+    {
+        yield return new WaitForSeconds(6f);
+
+        gameObject.SetActive(true);
+        
+        yield break;
+    }
+
     public void ResumeGame()
     {
         pauseMenuUI.SetActive(false);
@@ -92,6 +117,11 @@ public class UIController : MonoBehaviour
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         GameIsPaused = true;
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     
     public void ReturnHome()
