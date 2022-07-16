@@ -41,7 +41,7 @@ public class GameController : MonoBehaviour
 
     public delegate void ShowGameStartUIHandler();
     public static event ShowGameStartUIHandler ShowGameStartUI;
-
+    
     public delegate void StartCollectingInputHandler();
     public static event StartCollectingInputHandler StartCollectingInput;
 
@@ -131,7 +131,7 @@ public class GameController : MonoBehaviour
                         StopCollectingInput();
                         
                         // play victory sound
-                        victory.PlayDelayed(5.5f);
+                        victory.PlayDelayed(4f);
                         
                         // show canvas
                         ShowGameSuccessUIPanel();
@@ -139,7 +139,7 @@ public class GameController : MonoBehaviour
                     else
                     {
                         // play cheering sound
-                        cheering.PlayDelayed(5.5f);
+                        cheering.PlayDelayed(4f);
                     }
                 }
                 else
@@ -151,7 +151,7 @@ public class GameController : MonoBehaviour
                     StopCollectingInput?.Invoke();
                     
                     // play gameover sound
-                    gameover.PlayDelayed(5.5f);
+                    gameover.PlayDelayed(4f);
                     
                     // show canvas
                     ShowGameOverUIPanel?.Invoke();

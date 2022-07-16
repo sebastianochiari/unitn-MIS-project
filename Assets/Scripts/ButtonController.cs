@@ -20,7 +20,10 @@ public class ButtonController : MonoBehaviour
     public AudioSource audioSource;
 
     private GameObject _borderGameObject;
-    
+
+    public delegate void SendVibrateMotorHandler(int buttonID);
+    public static event SendVibrateMotorHandler SendVibrateMotor; 
+
     private void Awake()
     {
         // audio button initialization
@@ -53,11 +56,11 @@ public class ButtonController : MonoBehaviour
         BoardController.PlayTutorialButton -= OnPlayButton;
     }
 
-    private void OnPlayButton(int id, bool isTutorial)
+    private void OnPlayButton(int id, bool needIllumination)
     {
         if (id == buttonID)
         {
-            if (isTutorial || visualButton)
+            if (needIllumination || visualButton)
             {
                 StartCoroutine(FlashBorderCoroutine());
             }
@@ -67,7 +70,7 @@ public class ButtonController : MonoBehaviour
             }
             if (shakyButton)
             {
-                // send arduino event
+                SendVibrateMotor?.Invoke(id);
             }
         }
     }

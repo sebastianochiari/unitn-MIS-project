@@ -2664,6 +2664,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 407c99663e9589d409e75b31a3afdcd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputStream: 
+  data: []
+  arduinoInput: 1
 --- !u!1 &454893361
 GameObject:
   m_ObjectHideFlags: 0
@@ -7510,8 +7513,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   board: {fileID: 1180960164}
-  material1: {fileID: 2100000, guid: 373758a567a0f664c9c155b71448029a, type: 2}
-  material2: {fileID: 2100000, guid: a00ec3fc623119f45b6c7229b17bcdd7, type: 2}
 --- !u!1 &1222408025
 GameObject:
   m_ObjectHideFlags: 0

@@ -82,7 +82,7 @@ public class UIController : MonoBehaviour
         yield return new WaitForSeconds(8f);
         
         gameobject.SetActive(false);
-        
+
         yield break;
     }
 

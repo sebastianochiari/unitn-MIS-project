@@ -9,9 +9,6 @@ public class BoardController : MonoBehaviour
     public GameObject board;
     public static List<GameObject> Buttons;
 
-    public Material material1;
-    public Material material2;
-    
     // EVENTS
 
     public delegate void PlayTutorialButtonHandler(int buttonID, bool isTutorial);
@@ -43,7 +40,7 @@ public class BoardController : MonoBehaviour
     {
         GameController.SetupLevel -= OnSetupLevel;
         GameController.StartTutorial -= OnStartTutorial;
-        GameController.ShowSequence += OnShowSequence;
+        GameController.ShowSequence -= OnShowSequence;
     }
 
     private void Start()
