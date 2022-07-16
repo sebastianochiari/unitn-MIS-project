@@ -7360,6 +7360,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1180960165}
     m_Modifications:
+    - target: {fileID: 1861969057157316145, guid: 5d5f64a5696861a4e9b2bfdc9b8c6e07, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 15c975f217166a540bb0dc556b17c0cd, type: 2}
     - target: {fileID: 1861969057624327064, guid: 5d5f64a5696861a4e9b2bfdc9b8c6e07, type: 3}
       propertyPath: m_Name
       value: VisualButton2
@@ -8719,6 +8723,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1180960165}
     m_Modifications:
+    - target: {fileID: 1861969057157316145, guid: 5d5f64a5696861a4e9b2bfdc9b8c6e07, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 23ac81b7cf859e446946ad391f3b62f9, type: 2}
     - target: {fileID: 1861969057624327064, guid: 5d5f64a5696861a4e9b2bfdc9b8c6e07, type: 3}
       propertyPath: m_Name
       value: VisualButton3
@@ -11501,6 +11509,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1180960165}
     m_Modifications:
+    - target: {fileID: 1861969057157316145, guid: 5d5f64a5696861a4e9b2bfdc9b8c6e07, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9473a1f6525fcd54b8a90901b08f9c32, type: 2}
     - target: {fileID: 1861969057624327064, guid: 5d5f64a5696861a4e9b2bfdc9b8c6e07, type: 3}
       propertyPath: m_Name
       value: VisualButton1
