@@ -11,7 +11,7 @@ const int buttonPin_8 = 8;
 
 // configurazione pin motori
 const int vibrationMotor_1 = 12;
-const int vibrationMotor_2 = 12;
+const int vibrationMotor_2 = 13;
 
 // stato bottoni
 int buttonState_0 = 0;
