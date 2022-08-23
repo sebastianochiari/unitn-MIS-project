@@ -58,20 +58,15 @@ public class InputController : MonoBehaviour
                     // reading the stream line
                     inputStream = stream.ReadLine();
                     
-                    Debug.Log(inputStream);
-                    
                     // splitting the input stream line with the character , in order to extract single button values
                     data = inputStream.Split(',');
-                
-                    // TODO: aggiungere controllo che effettivamente sia arduino che parla a Unity e non viceversa
-                
+
                     // cycle through all the data entry (restricted to the number of active buttons) to see if a button was pressed
                     // we can skip consistency and duplicates controls: this logic is handled by the Arduino script
                     for (int i = 0; i < GameController.NumberOfButtons; i++)
                     {
                         if (Int32.Parse(data[i]) == 0)
                         {
-                            Debug.Log("Pressed button n. " + i);
                             ButtonPressed(i, true);
                         }
                     }
@@ -126,7 +121,6 @@ public class InputController : MonoBehaviour
 
     private void OnSendVibrateMotor(int buttonID)
     {
-        Debug.Log("Printing to stream: " + buttonID.ToString());
         stream.WriteLine(buttonID.ToString());
     }
 }

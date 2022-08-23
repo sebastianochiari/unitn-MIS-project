@@ -110,22 +110,12 @@ public class GameController : MonoBehaviour
         {
             if (_playerIsPlaying)
             {
-                Debug.Log("Checking if the button pressed corresponds to the right one in the sequence");
-
-                Debug.Log("Current buttonID required: " + Sequence[_pointerToSequence]);
-                Debug.Log("ButtonID pressed: " + buttonID);
-                
                 if (buttonID == Sequence[_pointerToSequence])
                 {
-
-                    Debug.Log("Got the right one");
-                    
                     _pointerToSequence++;
                     
                     if (_pointerToSequence == SequenceLength)
                     {
-                        Debug.Log("YOU WON!");
-                        
                         _playerIsPlaying = false;
 
                         StopCollectingInput();
@@ -144,8 +134,6 @@ public class GameController : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("GAME OVER!");
-                    
                     _playerIsPlaying = false;
 
                     StopCollectingInput?.Invoke();
@@ -173,9 +161,6 @@ public class GameController : MonoBehaviour
         firstOpeningPanel.SetActive(false);
 
         UIController.GameIsPaused = false;
-            
-        Debug.Log("Number of buttons: " + NumberOfButtons);
-        Debug.Log("Sequence Length: " + SequenceLength);
 
         CreateSequence();
 
@@ -190,7 +175,6 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < SequenceLength; i++)
         {
             Sequence[i] = random.Next(NumberOfButtons);
-            Debug.Log("Sequence[" + i + "]: " + Sequence[i]);
         }
     }
 

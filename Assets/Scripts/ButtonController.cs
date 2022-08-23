@@ -54,6 +54,7 @@ public class ButtonController : MonoBehaviour
     private void OnDisable()
     {
         BoardController.PlayTutorialButton -= OnPlayButton;
+        InputController.ButtonPressed -= OnPlayButton;
     }
 
     private void OnPlayButton(int id, bool needIllumination)

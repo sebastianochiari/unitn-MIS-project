@@ -29,6 +29,11 @@ String buttonState = "";
 // latest button configuration
 String latestButtonState = "";
 
+// the following variables are unsigned longs because the time, measured in
+// milliseconds, will quickly become a bigger number than can be stored in an int.
+unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
+unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
+
 // variable to store incoming serial data
 int incomingByte = 0;
 
@@ -37,7 +42,7 @@ int baudRate = 9600;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(baudRate);
   pinMode(buttonPin_0, INPUT);
   pinMode(buttonPin_1, INPUT);
   pinMode(buttonPin_2, INPUT);
@@ -98,7 +103,19 @@ void loop()
   // check if the previous state is equal to the current one
   if(buttonState != latestButtonState)
   {
-    Serial.println(buttonState);
+    // set the debouncing timer
+    lastDebounceTime = millis();
+  }
+
+  // if the timer expires, now we take care of the state changed
+  if ((millis() - lastDebounceTime) > debounceDelay)
+  {
+    // if the state actually changed (thus, it is not noise)
+    if(buttonState != latestButtonState)
+    {
+      // print button state configuration to the Serial port
+      Serial.println(buttonState);
+    }
   }
 
   // update latest button state to the current one
