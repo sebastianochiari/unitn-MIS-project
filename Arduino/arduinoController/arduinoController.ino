@@ -89,8 +89,8 @@ void loop()
   buttonState_7 = digitalRead(buttonPin_7);
   buttonState_8 = digitalRead(buttonPin_8);
 
-  // create the buttonState string for state comparison
-  buttonState = String(buttonState_0) + "," +
+  // create the string for state comparison
+  String reading = String(buttonState_0) + "," +
                 String(buttonState_1) + "," +
                 String(buttonState_2) + "," +
                 String(buttonState_3) + "," +
@@ -101,7 +101,7 @@ void loop()
                 String(buttonState_8);
 
   // check if the previous state is equal to the current one
-  if(buttonState != latestButtonState)
+  if(reading != latestButtonState)
   {
     // set the debouncing timer
     lastDebounceTime = millis();
@@ -111,15 +111,17 @@ void loop()
   if ((millis() - lastDebounceTime) > debounceDelay)
   {
     // if the state actually changed (thus, it is not noise)
-    if(buttonState != latestButtonState)
+    if(reading != buttonState)
     {
+      buttonState = reading;
+      
       // print button state configuration to the Serial port
       Serial.println(buttonState);
     }
   }
 
   // update latest button state to the current one
-  latestButtonState = buttonState;
+  latestButtonState = reading;
 }
 
 void makeVibrateMotors(int configuration) 
